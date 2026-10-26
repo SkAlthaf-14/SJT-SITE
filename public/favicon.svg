@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Solid deep espresso roast background -->
+  <rect width="100" height="100" fill="#24150F"/>
+  
+  <!-- Outer Gold Estate Crest Ring -->
+  <circle cx="50" cy="50" r="45" stroke="#C49A5A" stroke-width="2.5"/>
+  <circle cx="50" cy="50" r="41.5" stroke="#C49A5A" stroke-width="0.75" stroke-dasharray="2.5 1.5" opacity="0.8"/>
+  
+  <!-- Central Hand-Harvested Coffee Bean Emblem -->
+  <!-- Outer Bean Silhouette -->
+  <path d="M50 20C36.5 20 26.5 30.5 26.5 45C26.5 59.5 36.5 70 50 70C63.5 70 73.5 59.5 73.5 45C73.5 30.5 63.5 20 50 20Z" fill="#361F15" stroke="#C49A5A" stroke-width="2.5"/>
+  
+  <!-- Signature Curved Center Groove / Crease -->
+  <path d="M50 24C50 24 43 36 50 45C57 54 50 66 50 66" stroke="#E6C587" stroke-width="3.5" stroke-linecap="round"/>
+  
+  <!-- Official SJT Brand Monogram in Warm Chikmagalur Gold -->
+  <text x="50" y="87" text-anchor="middle" fill="#E6C587" font-family="Georgia, 'Playfair Display', 'Times New Roman', serif" font-weight="bold" font-size="14.5" letter-spacing="2">SJT</text>
+</svg>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none">
+  <rect width="64" height="64" rx="16" fill="#FFFFFF"/>
+  <rect x="0.75" y="0.75" width="62.5" height="62.5" rx="15.25" stroke="#E5DFD7" stroke-width="1.5"/>
+  <g transform="translate(10, 10)">
+    <!-- Orange Upper Triangle / Arrow -->
+    <path d="M26.5 4.5L9.5 21.5L14.8 26.8L31.8 9.8L26.5 4.5Z" fill="#F47920"/>
+    <!-- Green Lower Triangle / Arrow -->
+    <path d="M34.5 20.5L17.5 37.5L22.8 42.8L39.8 25.8L34.5 20.5Z" fill="#0F7938"/>
+    <!-- Dark Slate Core -->
+    <path d="M15.5 11.5L3.5 23.5L8.8 28.8L20.8 16.8L15.5 11.5Z" fill="#4A5568"/>
+    <!-- "UPI" Text wordmark -->
+    <text x="22" y="34" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-style="italic" font-size="12" fill="#20150F">UPI</text>
+  </g>
+</svg>

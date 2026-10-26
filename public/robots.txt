@@ -1,0 +1,14 @@
+# SJT FARMS - robots.txt
+# Production domain: https://sjtfarms.com
+
+User-agent: *
+Allow: /
+
+# Disallow private and administrative paths
+Disallow: /admin
+Disallow: /admin/
+Disallow: /cart
+Disallow: /checkout
+Disallow: /order-success
+
+Sitemap: https://sjtfarms.com/sitemap.xml

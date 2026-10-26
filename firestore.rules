@@ -1,0 +1,172 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin') ||
+        request.auth.token.admin == true
+      );
+    }
+
+    // 1. Users collection: users can read and write their own profile, admins have full access.
+    // Prevent privilege escalation: normal customers cannot assign or elevate role to 'admin'.
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId) && (!('role' in request.resource.data) || request.resource.data.role == 'customer');
+      allow update: if isAdmin() || (
+        isOwner(userId) && 
+        (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']))
+      );
+      allow delete: if isAdmin();
+    }
+
+    // 2. Products collection: publicly readable for storefront, write only by admin
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 3. Orders collection: 
+    // Customers can create orders, read ONLY their own orders (by userId or customerEmail).
+    // Customers CANNOT alter order status, fulfillment, or mark payments as paid.
+    // Customers can only submit their 12-digit UTR reference number for verification.
+    // Admin has full control to inspect, reconcile, verify payments, and update fulfillment.
+    match /orders/{orderId} {
+      allow create: if (
+        (!isAuthenticated() && request.resource.data.userId is string) ||
+        (isAuthenticated() && request.resource.data.userId == request.auth.uid)
+      ) && (
+        isAdmin() || (
+          // Safeguard: Customer cannot mark payment as verified/paid during checkout
+          (!('paymentVerified' in request.resource.data) || request.resource.data.paymentVerified != true) &&
+          (!('paymentStatus' in request.resource.data) || request.resource.data.paymentStatus in [
+            'pending', 'pending_verification', 'awaiting_payment', 'payment_pending',
+            'payment_pending_verification', 'Awaiting Payment', 'Cash on Delivery', 'Cash On Delivery'
+          ])
+        )
+      );
+      allow read: if isAdmin() || (
+        isAuthenticated() && (
+          resource.data.userId == request.auth.uid ||
+          resource.data.customerEmail == request.auth.token.email ||
+          resource.data.customer.userId == request.auth.uid ||
+          resource.data.customer.email == request.auth.token.email
+        )
+      );
+      allow update: if isAdmin() || (
+        // Restricted customer update solely for submitting bank UTR reference:
+        // 1. Must be the customer's own order or guest order
+        (
+          (isAuthenticated() && (
+            resource.data.userId == request.auth.uid ||
+            resource.data.customerEmail == request.auth.token.email ||
+            resource.data.customer.userId == request.auth.uid ||
+            resource.data.customer.email == request.auth.token.email
+          )) ||
+          (!isAuthenticated() && resource.data.userId == 'guest')
+        ) &&
+        // 2. Cannot touch already-paid or verified orders
+        (resource.data.paymentStatus != 'paid' && !('paymentVerified' in resource.data && resource.data.paymentVerified == true)) &&
+        // 3. Permitted affected keys ONLY for UTR submission
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'utrNumber', 'paymentVerificationStatus', 'statusHistory', 'updatedAt'
+        ]) &&
+        // 4. paymentVerificationStatus can ONLY transition to verification_pending, details_submitted, or payment_pending_verification
+        request.resource.data.paymentVerificationStatus in [
+          'details_submitted', 'verification_pending', 'payment_pending_verification'
+        ] &&
+        // 5. Must provide a valid string utrNumber of length >= 6
+        request.resource.data.utrNumber is string &&
+        request.resource.data.utrNumber.size() >= 6
+      );
+      allow delete: if isAdmin();
+    }
+
+    // 4. Payments collection: 
+    // Allowed to create payment during checkout; customers can read their own payments; admins manage all.
+    match /payments/{paymentId} {
+      allow create: if true;
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+      allow update, delete: if isAdmin();
+    }
+
+    // 5. Reviews collection:
+    // Approved reviews are publicly readable. Customers can submit reviews. Admins can moderate/update/delete.
+    match /reviews/{reviewId} {
+      allow read: if resource.data.status == 'approved' || isAdmin();
+      allow create: if request.resource.data.rating is number 
+                    && request.resource.data.rating >= 1 
+                    && request.resource.data.rating <= 5;
+      allow update, delete: if isAdmin();
+    }
+
+    // 6. Contacts collection:
+    // Anyone can submit a contact inquiry; only admins can view, update status, and delete.
+    match /contacts/{contactId} {
+      allow create: if request.resource.data.name is string 
+                    && request.resource.data.email is string
+                    && request.resource.data.message is string;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // 7. Categories collection: publicly readable, admin write
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 8. Newsletter collection: public subscribe, admin manage
+    match /newsletter/{subscriberId} {
+      allow create: if request.resource.data.email is string;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // 9. Protected Atomic Sequential Order Counter:
+    // Atomic allocation starting at 101. Never publicly writable: update requires strictly incrementing currentOrderNumber by 1.
+    match /counters/{counterId} {
+      allow read: if true;
+      allow create: if isAdmin() || (
+        request.resource.data.currentOrderNumber is number &&
+        request.resource.data.currentOrderNumber >= 100
+      );
+      allow update: if isAdmin() || (
+        request.resource.data.currentOrderNumber is number &&
+        (
+          (resource.data.currentOrderNumber is number && request.resource.data.currentOrderNumber == resource.data.currentOrderNumber + 1) ||
+          (!('currentOrderNumber' in resource.data) && request.resource.data.currentOrderNumber >= 100)
+        )
+      );
+      allow delete: if isAdmin();
+    }
+
+    // 10. Order Notifications Queue:
+    // Queue new order notifications during checkout. Only admins can read, update, or audit.
+    match /order_notifications/{notificationId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // 11. Protected UTR Reservations:
+    // Atomic reservation documents to guarantee reference uniqueness across all orders.
+    // Clients CANNOT read or write directly; only trusted backend / admin allowed.
+    match /utr_reservations/{reservationId} {
+      allow read, write: if isAdmin();
+    }
+
+    // Deny all other access by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

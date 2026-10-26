@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 900" width="1800" height="900">
+  <defs>
+    <linearGradient id="themeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#30080E" />
+      <stop offset="100%" stop-color="#4A0E17" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E5C158" />
+      <stop offset="50%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#997722" />
+    </linearGradient>
+  </defs>
+
+  <!-- Left Panel: Story & Philosophy -->
+  <rect x="0" y="0" width="500" height="900" fill="url(#themeGrad)" />
+  <rect x="25" y="25" width="455" height="850" fill="none" stroke="#D4AF37" stroke-width="3" />
+  <rect x="32" y="32" width="441" height="836" fill="none" stroke="#D4AF37" stroke-width="1" />
+  <text x="250" y="80" font-family="Georgia, serif" font-size="34" font-style="italic" fill="#D4AF37" text-anchor="middle">The True Taste</text>
+  <text x="250" y="120" font-family="Georgia, serif" font-size="28" font-weight="bold" fill="#FFFFFF" text-anchor="middle">of Araku</text>
+  <line x1="120" y1="145" x2="380" y2="145" stroke="#D4AF37" stroke-width="2" />
+  <text x="50" y="190" font-family="Arial, sans-serif" font-size="17" fill="#FBF6F0">
+    <tspan x="50" dy="0">Sourced from the lush hills of Araku Valley,</tspan>
+    <tspan x="50" dy="28">our single-origin harvest delivers unmatched</tspan>
+    <tspan x="50" dy="28">aroma, creamy crema, and authentic taste.</tspan>
+  </text>
+
+  <!-- Center Panel: Brand Identity & Net Weight -->
+  <rect x="500" y="0" width="800" height="900" fill="#4A0E17" />
+  <text x="900" y="80" font-family="Georgia, serif" font-size="44" font-weight="bold" fill="#FFFFFF" text-anchor="middle">SJT FARMS</text>
+  <text x="900" y="115" font-family="Georgia, serif" font-size="20" font-style="italic" fill="#D4AF37" text-anchor="middle">Pure Goodness from Nature</text>
+  <rect x="620" y="150" width="560" height="90" rx="45" fill="#3A0910" stroke="#D4AF37" stroke-width="3" />
+  <text x="900" y="208" font-family="Georgia, serif" font-size="34" font-weight="bold" fill="#D4AF37" text-anchor="middle">ARAKU SIGNATURE COFFEE POWDER</text>
+
+  <!-- Bottom Net Weight Banner -->
+  <rect x="700" y="770" width="400" height="100" rx="10" fill="url(#goldGrad)" stroke="#8B6508" stroke-width="3" />
+  <text x="900" y="805" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#4A3208" text-anchor="middle">NET WEIGHT</text>
+  <text x="900" y="848" font-family="Georgia, serif" font-size="38" font-weight="bold" fill="#1A1102" text-anchor="middle">100 g</text>
+
+  <!-- Right Panel: Ingredients, Instructions & MRP -->
+  <rect x="1300" y="0" width="500" height="900" fill="url(#themeGrad)" />
+  <rect x="1320" y="25" width="455" height="850" fill="none" stroke="#D4AF37" stroke-width="3" />
+  <rect x="1327" y="32" width="441" height="836" fill="none" stroke="#D4AF37" stroke-width="1" />
+  <text x="1547" y="80" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#D4AF37" text-anchor="middle">INGREDIENTS</text>
+  <text x="1547" y="120" font-family="Arial, sans-serif" font-size="16" fill="#FFFFFF" text-anchor="middle">80% Coffee Beans (Arabica) | 20% Chicory</text>
+
+  <!-- MRP White Card -->
+  <rect x="1350" y="600" width="395" height="235" rx="12" fill="#FDFBF7" stroke="#D4AF37" stroke-width="3" />
+  <rect x="1370" y="625" width="44" height="44" fill="none" stroke="#1B7A3E" stroke-width="3" />
+  <circle cx="1392" cy="647" r="12" fill="#1B7A3E" />
+  <text x="1580" y="635" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#5C4033" text-anchor="middle">MRP (incl. of all taxes)</text>
+  <text x="1580" y="685" font-family="Georgia, serif" font-size="46" font-weight="bold" fill="#16181B" text-anchor="middle">₹119</text>
+  <text x="1580" y="730" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#A37936" text-anchor="middle">NET WEIGHT: 100 g</text>
+  <text x="1547" y="780" font-family="Arial, sans-serif" font-size="13" fill="#6B5B52" text-anchor="middle">FSSAI Certified • Marketed by SJT FARMS</text>
+  <text x="1547" y="805" font-family="Arial, sans-serif" font-size="13" fill="#6B5B52" text-anchor="middle">Araku Valley, AP - 531149 • care@sjtfarms.com</text>
+</svg>
